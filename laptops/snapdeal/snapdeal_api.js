@@ -117,6 +117,19 @@ function saveSpecCallBack(productIndex,category, specId,primeId,excluded)
 		if (err) console.log(err);
 		productCounter++;
 		console.log('insserted:'+productIndex);
+		
+		var table = "'sepp_product_snapdeal'";
+		var id = "'"+productAttributes[titleArr[0]]+"'";
+		var spec_id="'"+specId+"'";
+		
+		var delim = "'_'";
+		pool.query("call sp_savePrimeId("+table+","+id+","+spec_id+","+delim+")", function(err1, result1) {
+			if (err1) {
+				console.log('ERROR: '+err1);
+			} 
+			
+		});
+		
 		if(productCounter==productLength){
 			var d = new Date();
 			var stopTime = d.getTime();

@@ -144,7 +144,7 @@ function parseProduct(res){
 }
 
 function getSpecCallBack(productIndex, obj,category){
-		flipkart_savespec.saveSpecifications(productIndex,obj,category, saveSpecCallBack);
+	flipkart_savespec.saveSpecifications(productIndex,obj,category, saveSpecCallBack);
 }
 
 function saveSpecCallBack(productIndex,category, specId,primeId,excluded){
@@ -171,13 +171,26 @@ function saveSpecCallBack(productIndex,category, specId,primeId,excluded){
 	//		res.json({"code" : 100, "status" : "Error in connection database"});
 	//		return;
 	//	}
-	pool.query(sql, function(err, rows, fields) 
+	pool.query(sql, function(err, insert_id) 
 	{
 		
 		if (err) 
 		console.log(err);
 		
 		console.log('inserted:'+productIndex);
+		
+		var table = "'sepp_product_flipkart'";
+		var id = "'"+productIdentifier.productId+"'";
+		var spec_id="'"+specId+"'";
+		
+		var delim = "'_'";
+		pool.query("call sp_savePrimeId("+table+","+id+","+spec_id+","+delim+")", function(err1, result1) {
+			if (err1) {
+				console.log('ERROR: '+err1);
+			} 
+			
+		});
+		
 		productCounter++;
 		
 		if(productCounter==productLength){
@@ -206,4 +219,4 @@ function saveSpecCallBack(productIndex,category, specId,primeId,excluded){
 
 function sortFunc(a,b){
 	return a-b;
-	}										
+	}											
