@@ -69,20 +69,23 @@ var arraySubset = function (arr1, arr2) {
 	});
 };
 
+
 function keyAndArraySubsetEqualExists(arr1,key1,arr2,key2)
 {
 	if(  arr1.hasOwnProperty(key1) && arr2.hasOwnProperty(key2) && arr1[key1] && arr2[key2] )
 	{
 		var regexp = new RegExp('[-+()*/.:? ]', 'g');
-		var tmp1 = arr1[key1].split(regexp);
-		var tmp2 = arr2[key2].split(regexp);
-		if( arraySubset(tmp1,tmp2) )
+		//var tmp1 = arr1[key1].replace(/(\(.*?\))/g, '').split("/");
+		//var tmp2 = arr2[key2].replace(/(\(.*?\))/g, '').split("/");
+		var tmparr1 = arr1[key1].split(regexp);
+		var tmparr2 = arr2[key2].split(regexp);
+		if( arraySubset(tmparr1,tmparr2) )
 		return true;
 		else
 		return false;
 	}
 	else
-	return myXOR(arr1.hasOwnProperty(key1),arr2.hasOwnProperty(key2));
+	return rulesExceptions(arr1,key1,arr2,key2);
 }
 
 function substringExists(str1,str2)
@@ -94,17 +97,17 @@ function substringExists(str1,str2)
 }
 function keyAndSubstringExists(arr1,key1,arr2,key2)
 {
-	if( ( arr1.hasOwnProperty(key1) && arr2.hasOwnProperty(key2)) && arr1[key1] && arr2[key2] && ((arr1[key1].indexOf(arr2[key2])!=-1) || (arr2[key2].indexOf(arr1[key1])!=-1)) )
+	if( ( arr1.hasOwnProperty(key1) && arr2.hasOwnProperty(key2)) && arr1[key1] && arr2[key2] && arr1[key1]!="-1" && arr2[key2]!="-1" && ((arr1[key1].indexOf(arr2[key2])!=-1) || (arr2[key2].indexOf(arr1[key1])!=-1)) )
 	return true;
 	else
-	return myXOR(arr1.hasOwnProperty(key1),arr2.hasOwnProperty(key2));
+	return rulesExceptions(arr1,key1,arr2,key2);
 }
 function keyAndSubsequenceExists(arr1,key1,arr2,key2)
 {
 	if( ( arr1.hasOwnProperty(key1) && arr2.hasOwnProperty(key2)) && arr1[key1] && arr2[key2] && mySubsequence(arr1[key1],arr2[key2]) )
 	return true;
 	else
-	return myXOR(arr1.hasOwnProperty(key1),arr2.hasOwnProperty(key2));
+	return rulesExceptions(arr1,key1,arr2,key2);
 }
 function mySubsequence(str1,str2)
 {
@@ -119,21 +122,25 @@ function keyAndSubstringExists_rare(arr1,key1,arr2,key2)
 	if( ( arr1.hasOwnProperty(key1) && arr2.hasOwnProperty(key2)) && arr1[key1] && arr2[key2] && ((arr1[key1].indexOf(arr2[key2])!=-1) || (arr2[key2].indexOf(arr1[key1])!=-1)) )
 	return true;
 	else
-	return myXOR(arr1.hasOwnProperty(key1),arr2.hasOwnProperty(key2));
+	return rulesExceptions(arr1,key1,arr2,key2);
 }
 
 function keyAndEqualExists(arr1,key1,arr2,key2)
 {
-	if( arr1.hasOwnProperty(key1) && arr2.hasOwnProperty(key2) && arr1[key1] && arr2[key2] && (arr1[key1]==arr2[key2]) ) 
+	if( arr1.hasOwnProperty(key1) && arr2.hasOwnProperty(key2) && arr1[key1] && arr2[key2] && arr1[key1]!="-1" && arr2[key2]!="-1" && (arr1[key1]==arr2[key2]) ) 
 	return true;
 	else
-	return myXOR(arr1.hasOwnProperty(key1),arr2.hasOwnProperty(key2));
+	return rulesExceptions(arr1,key1,arr2,key2);
 }
-function myXOR(bool1,bool2)
+function rulesExceptions(arr1,key1,arr2,key2)
 {
 	//if ( !bool1 == !bool2)
-	if(bool1==false && bool2==false)
-	return true;
+	if( arr1.hasOwnProperty(key1)==false && arr2.hasOwnProperty(key2)==false )
+		return true;
+	else if ( ( arr1.hasOwnProperty(key1)==false && arr2.hasOwnProperty(key2) && arr2[key2]=="-1" ) || ( arr2.hasOwnProperty(key2)==false && arr1.hasOwnProperty(key1) && arr1[key1]=="-1" ))
+		return true;
+	else if ( ( arr1.hasOwnProperty(key1) && arr1[key1]=="no" && arr2.hasOwnProperty(key2) && arr2[key2]=="-1" ) || ( arr2.hasOwnProperty(key2) && arr2[key2]=="no" && arr1.hasOwnProperty(key1) && arr1[key1]=="-1" ) )
+		return true;
 	else
-	return false;
+		return false;
 }
