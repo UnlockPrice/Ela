@@ -33,6 +33,7 @@ pool.query(sql, function(err, result)
 		if(arr1['modelid'] && arr1['modelid']!="-1")
 		{
 			arr1['modelid'] =arr1['modelid'].replace(/(\(.*?\))/g, '').split("/")[0].replace(/[^a-z\d]+/gi, "");
+			arr1['modelname'] =arr1['modelname'].replace(/(\(.*?\))/g, '').split("/")[0].replace(/[^a-z\d]+/gi, "");
 		}
 			arr1["title"]=result[i].title;
 			loop2:for(var k=0;k<rules['laptops'].length;k++)
@@ -40,8 +41,10 @@ pool.query(sql, function(err, result)
 				loop3:for(var j=0;j<result1.length;j++)
 				{
 					var arr2 = JSON.parse(result1[j].spec_id);
-					if(arr2['modelid'] && arr2['modelid']!="-1")
+					if(arr2['modelid'] && arr2['modelid']!="-1"){
 						arr2['modelid'] =arr2['modelid'].replace(/(\(.*?\))/g, '').split("/")[0].replace(/[^a-z\d]+/gi, "");
+						arr1['modelname'] =arr1['modelname'].replace(/(\(.*?\))/g, '').split("/")[0].replace(/[^a-z\d]+/gi, "");
+					}
 					arr2["title"] = result1[j].title;
 					//console.log(rules['laptops'].length);
 					
