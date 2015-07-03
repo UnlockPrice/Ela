@@ -26,17 +26,13 @@ pool.query(sql, function(err, result)
 	pool.query(sql1, function(err1, result1) 
 	{
 		var out = "";
-		var count = 0;
+		
 		loop1:for(var i=0;i<result.length;i++)
 		{
 			var arr1 = JSON.parse(result[i].spec_id);
 		if(arr1['modelid'] && arr1['modelid']!="-1")
 		{
-			arr1['modelid'] =arr1['modelid'].replace(/(\(.*?\))/g, '').split("/")[0].replace(/[^a-z\d]+/gi, "");			
-		}
-		if(arr1['modelname'] && arr1['modelname']!="-1")
-		{			
-			arr1['modelname'] =arr1['modelname'].split("/")[0].replace(/[^a-z\d]+/gi, "");
+			arr1['modelid'] =arr1['modelid'].replace(/(\(.*?\))/g, '').split("/")[0].replace(/[^a-z\d]+/gi, "");
 		}
 			arr1["title"]=result[i].title;
 			loop2:for(var k=0;k<rules['laptops'].length;k++)
@@ -44,20 +40,14 @@ pool.query(sql, function(err, result)
 				loop3:for(var j=0;j<result1.length;j++)
 				{
 					var arr2 = JSON.parse(result1[j].spec_id);
-					if(arr2['modelid'] && arr2['modelid']!="-1"){
-						arr2['modelid'] =arr2['modelid'].replace(/(\(.*?\))/g, '').split("/")[0].replace(/[^a-z\d]+/gi, "");						
-					}
-					if(arr2['modelname'] && arr2['modelname']!="-1")
-					{			
-						arr2['modelname'] =arr2['modelname'].split("/")[0].replace(/[^a-z\d]+/gi, "");
-					}
+					if(arr2['modelid'] && arr2['modelid']!="-1")
+						arr2['modelid'] =arr2['modelid'].split("/")[0].replace(/(\(.*?\))/g, '').replace(/[^a-z\d]+/gi, "");
 					arr2["title"] = result1[j].title;
 					//console.log(rules['laptops'].length);
 					
 					if ( funcs.decodeRules(arr1,arr2,rules['laptops'][k]) )
 					{
 						out += result[i].title+ "::"+ result1[j].title+"\n";
-						count++;
 						//out += result[i].product_identifier+ "::"+ result1[j].product_identifier+"\n";
 						break loop2;
 					}
@@ -97,7 +87,6 @@ pool.query(sql, function(err, result)
 			var stopTime = d1.getTime();
 			var elapsedTime = stopTime - startTime;
 			console.log('completed in '+elapsedTime);
-			console.log('count'+ count);
 		//process.exit(0);
 		
 	});
