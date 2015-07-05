@@ -49,7 +49,10 @@ function function_calculate(arr1,key1,opr,arr2,key2)
 	if (opr == "EQ")
 		return keyAndEqualExists(arr1,key1,arr2,key2);
 	else if(opr == "SU")
-		return keyAndSubstringExists(arr1,key1,arr2,key2);
+		if(key1==key2)
+			return keyAndSubstringExists(arr1,key1,arr2,key2);
+		else
+			return keyAndSubstringExists(arr1,key1,arr2,key2) || keyAndSubstringExists(arr1,key2,arr2,key1);
 	else if(opr == "SUR")
 		return keyAndSubstringExists_rare(arr1,key1,arr2,key2);
 	else if(opr == "SS")
