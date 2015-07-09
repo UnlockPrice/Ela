@@ -75,6 +75,7 @@ exports.scrapByCrawler=function(productIndex,url,category, callback){
 						productdetails ={"ProductId":productid ,"Price":( ($("#selling-price-id").text())?($("#selling-price-id").text()):'-1' ) ,"MRP": ( ($("#original-price-id").text())?($("#original-price-id").text()):'-1' ),"Delivery": ( ($(".standardDeliveryText").text())?($(".standardDeliveryText").text()):'-1' ),"COD":( ($("#cod-outer-box").text().replace(/\s/g, ''))?($("#cod-outer-box").text().replace(/\s/g, '')):'-1' ),"EMI":( ($("#emi-outer-box").text().replace(/\s/g, ''))?($("#emi-outer-box").text().replace(/\s/g, '')):'-1' ),"Offers":( ($(".ClsOfferText").text())?($(".ClsOfferText").text()):'-1' ),"Discount":( ($("#discount-id").text())?($("#discount-id").text()):'-1' ),"STOCK":stock,"Title":( ($(".pdpName").find("h1").text())?($(".pdpName").find("h1").text()):'-1' ),"URL":( (url)?(url):'-1' )};	
 						
 						finalobj = changeObjectFinal(category,finalobj);
+						finalobj['brand']=($(".pdpName").find("h1").text()).split(" ")[0].replace(/\s/g, '').toLowerCase();
 						callback(productIndex, finalobj,category, productdetails);
 						return; 
 						
@@ -105,6 +106,7 @@ function changeObjectFinal(category,finalobj)
 {
 	if(category == "laptops")
 	{
+		
 		if(finalobj['hdd'])
 		{
 			var patt = /ssd|sshd/gi;
