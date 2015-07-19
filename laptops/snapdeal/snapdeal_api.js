@@ -108,16 +108,17 @@ function saveSpecCallBack(productIndex,category, specId,primeId,excluded)
 	var titleArr = snapdeal_scrap.productdetails_arr;
 	var productAttributes = productList[productIndex];
 	var productObject = productObj[productIndex];
+	var specIdStr = JSON.stringify(specId);
 	//console.log(productAttributes[titleArr[0]], productAttributes[titleArr[1]],productAttributes[titleArr[6]],productAttributes[titleArr[8]]);
 	//var productShippingBaseInfo = productList[productIndex].productShippingBaseInfo;
-	var sql = 'insert into `sepp_product_snapdeal` (`product_identifier`,`category`,`model_id`,`spec_id`,`prime_id`	,`product_brand`,`title`,`inStock`,`manufacturer_id`,`shipping`,`mrp`,`selling_price`,`date_added`,`date_modified`,`viewed`,`emi_available`,`cod_available`,`image`,`discount_percentage`,`product_url`) values ('+mysql.escape(productAttributes[titleArr[0]])+','+mysql.escape(category)+','+mysql.escape(excluded)+','+mysql.escape(specId)+','+mysql.escape(primeId)+','+mysql.escape(productObject['brand'])+','+mysql.escape(productAttributes[titleArr[9]])+','+mysql.escape(productAttributes[titleArr[8]])+','+mysql.escape(productObject['brand'])+','+mysql.escape(productAttributes[titleArr[3]])+','+productAttributes[titleArr[2]]+','+productAttributes[titleArr[1]]+','+mysql.escape(jsonDate)+','+mysql.escape(jsonDate)+','+1+','+mysql.escape(productAttributes[titleArr[5]])+','+mysql.escape(productAttributes[titleArr[4]])+','+mysql.escape('-1')+','+mysql.escape(productAttributes[titleArr[7]])+','+mysql.escape(productAttributes[titleArr[10]])+')';
+	var sql = 'insert into `sepp_product_snapdeal` (`product_identifier`,`category`,`model_id`,`spec_id`,`prime_id`	,`product_brand`,`title`,`inStock`,`manufacturer_id`,`shipping`,`mrp`,`selling_price`,`date_added`,`date_modified`,`viewed`,`emi_available`,`cod_available`,`image`,`discount_percentage`,`product_url`) values ('+mysql.escape(productAttributes[titleArr[0]])+','+mysql.escape(category)+','+mysql.escape(excluded)+','+mysql.escape(specIdStr)+','+mysql.escape(primeId)+','+mysql.escape(productObject['brand'])+','+mysql.escape(productAttributes[titleArr[9]])+','+mysql.escape(productAttributes[titleArr[8]])+','+mysql.escape(productObject['brand'])+','+mysql.escape(productAttributes[titleArr[3]])+','+productAttributes[titleArr[2]]+','+productAttributes[titleArr[1]]+','+mysql.escape(jsonDate)+','+mysql.escape(jsonDate)+','+1+','+mysql.escape(productAttributes[titleArr[5]])+','+mysql.escape(productAttributes[titleArr[4]])+','+mysql.escape('-1')+','+mysql.escape(productAttributes[titleArr[7]])+','+mysql.escape(productAttributes[titleArr[10]])+')';
 	//console.log(sql);
 	pool.query(sql, function(err, rows, fields) 
 	{
 		if (err) console.log(err);
 		productCounter++;
 		console.log('insserted:'+productIndex);
-		
+		/*
 		var table = "'sepp_product_snapdeal'";
 		var id = "'"+productAttributes[titleArr[0]]+"'";
 		var spec_id="'"+specId+"'";
@@ -129,7 +130,7 @@ function saveSpecCallBack(productIndex,category, specId,primeId,excluded)
 			} 
 			
 		});
-		
+		*/
 		if(productCounter==productLength){
 			var d = new Date();
 			var stopTime = d.getTime();

@@ -32,7 +32,7 @@ exports.saveSpecifications = function(productIndex,obj,category, callback){
 	}
 	if(count==0){
 		console.log('NA:'+productIndex);
-		callback(productIndex,category, -1,-1,-1);
+		callback(productIndex,category, "",-1,-1);
 		return;
 	}
 	pool.getConnection(function(err,connection){
@@ -40,11 +40,11 @@ exports.saveSpecifications = function(productIndex,obj,category, callback){
 			console.log('savepec;ERROR: '+err);
 			connection.release();
 			res.json({"code" : 100, "status" : "Error in connection database"});
-			callback(productIndex,category, -1,-1,-1);
+			callback(productIndex,category,"",-1,-1);
 			return;
 		}
 		
-		var specsArr=[];
+		var specsArr={};
 		var prime_mul = 1;
 		var specIdStr = "";
 		for(var key in obj){
@@ -53,54 +53,49 @@ exports.saveSpecifications = function(productIndex,obj,category, callback){
 				if(obj[key])
 				{
 					excludedOutput += "_"+obj[key];
+					specsArr[key] = obj[key];
 				}
 				counter++;
 				if(count==counter){
 					connection.release();
-					if (specsArr.length > 0)
-						specIdStr = "_"+specsArr.join('_')+"_";
-					else 
-						specIdStr = -1;
+					
 					
 					excludedOutput = excludedOutput+"_";
 					
 					if (prime_mul == 1)
 						prime_mul = -1;
 					
-					callback(productIndex, category, specIdStr,prime_mul,excludedOutput);
+					callback(productIndex, category, specsArr,prime_mul,excludedOutput);
 					break;
 				}
 				continue;
 			}
 			var myparams = "'"+category+"','"+key+"','"+obj[key]+"'";
 			
-			connection.query("call sp_saveSpecification("+myparams+",@specid)", function(err, result) {
+			connection.query("call sp_saveSpecification_new("+myparams+",@spectype_out,@specvalue_out)", function(err, result) {
 				if (err) {
 					console.log('ERROR: '+err);
 					connection.release();
 					return;
 				}   
 				counter++;
-				var specId = result[0][0].specId;
-				if(specId)
+				var spectype_out = result[0][0].spectype_out;
+				var specvalue_out = result[0][0].specvalue_out;
+				if(specvalue_out)
 				{
-					specsArr[index]=specId;
-					prime_mul = prime_mul*parseInt(specId);
+					specsArr[spectype_out]=specvalue_out;
+					//prime_mul = prime_mul*parseInt(specId);
 					index++;
 				}
 				if(count==counter){
 					connection.release();
-					if (specsArr.length > 0)
-						specIdStr = "_"+specsArr.join('_')+"_";
-					else 
-						specIdStr = -1;
 					
 					excludedOutput = excludedOutput+"_";
 					
 					if (prime_mul == 1)
 						prime_mul = -1;
 					
-					callback(productIndex,category, specIdStr,prime_mul,excludedOutput);
+					callback(productIndex,category, specsArr,prime_mul,excludedOutput);
 					return;
 				}
 			});

@@ -122,6 +122,7 @@ function parseProduct(res){
 		productList = productList.concat(jsonData.productInfoList);
 		productLength = productList.length;
 		nextURL = jsonData.nextUrl;
+		//nextURL ='';
 		if(nextURL)
 		{
 			requestProduct(nextURL);
@@ -134,6 +135,7 @@ function parseProduct(res){
 				var d = new Date();
 				startTime = d.getTime();
 				for(var i=0;i<productLength;i++){
+				//for(var i=0;i<50;i++){
 					flipkart_scrap.scrapByCrawler(i, productList[i].productBaseInfo.productAttributes.productUrl, section,getSpecCallBack);
 				}
 			}
@@ -155,14 +157,14 @@ function saveSpecCallBack(productIndex,category, specId,primeId,excluded){
 	//console.log('saveSpeccall');
 	var time = new Date();
 	var jsonDate = time.toJSON();
-	//var specIdStr = specId;
+	var specIdStr = JSON.stringify(specId);
 	//console.log('specStr'+specIdStr);
 	//console.log('totalSpecsId:'+productSpecId);
 	//console.log('productIndex:'+productIndex);
 	var productIdentifier = productList[productIndex].productBaseInfo.productIdentifier;
 	var productAttributes = productList[productIndex].productBaseInfo.productAttributes;
 	var productShippingBaseInfo = productList[productIndex].productShippingBaseInfo;
-	var sql = 'insert into `sepp_product_flipkart` (`product_identifier`,`category`,`model_id`,`spec_id`,`prime_id`,`product_brand`,`title`,`inStock`,`manufacturer_id`,`shipping`,`mrp`,`selling_price`,`date_added`,`date_modified`,`viewed`,`emi_available`,`cod_available`,`image`,`discount_percentage`,`product_url`) values ('+mysql.escape(productIdentifier.productId)+','+mysql.escape(category)+','+mysql.escape(excluded)+','+mysql.escape(specId)+','+mysql.escape(primeId)+','+mysql.escape(productAttributes.productBrand)+','+mysql.escape(productAttributes.title)+','+mysql.escape(productAttributes.inStock)+','+1+','+1+','+productAttributes.maximumRetailPrice.amount+','+productAttributes.sellingPrice.amount+','+mysql.escape(jsonDate)+','+mysql.escape(jsonDate)+','+1+','+productAttributes.emiAvailable+','+productAttributes.codAvailable+','+mysql.escape(productAttributes.imageUrls["400x400"])+','+productAttributes.discountPercentage+','+mysql.escape(productAttributes.productUrl)+')';
+	var sql = 'insert into `sepp_product_flipkart` (`product_identifier`,`category`,`model_id`,`spec_id`,`prime_id`,`product_brand`,`title`,`inStock`,`manufacturer_id`,`shipping`,`mrp`,`selling_price`,`date_added`,`date_modified`,`viewed`,`emi_available`,`cod_available`,`image`,`discount_percentage`,`product_url`) values ('+mysql.escape(productIdentifier.productId)+','+mysql.escape(category)+','+mysql.escape(excluded)+','+mysql.escape(specIdStr)+','+mysql.escape(primeId)+','+mysql.escape(productAttributes.productBrand)+','+mysql.escape(productAttributes.title)+','+mysql.escape(productAttributes.inStock)+','+1+','+1+','+productAttributes.maximumRetailPrice.amount+','+productAttributes.sellingPrice.amount+','+mysql.escape(jsonDate)+','+mysql.escape(jsonDate)+','+1+','+productAttributes.emiAvailable+','+productAttributes.codAvailable+','+mysql.escape(productAttributes.imageUrls["400x400"])+','+productAttributes.discountPercentage+','+mysql.escape(productAttributes.productUrl)+')';
 	//console.log(sql);
 	//pool.getConnection(function(err,connection){
 	//	if (err) {
@@ -178,7 +180,7 @@ function saveSpecCallBack(productIndex,category, specId,primeId,excluded){
 		console.log(err);
 		
 		console.log('inserted:'+productIndex);
-		
+		/*
 		var table = "'sepp_product_flipkart'";
 		var id = "'"+productIdentifier.productId+"'";
 		var spec_id="'"+specId+"'";
@@ -190,7 +192,7 @@ function saveSpecCallBack(productIndex,category, specId,primeId,excluded){
 			} 
 			
 		});
-		
+		*/
 		productCounter++;
 		
 		if(productCounter==productLength){
