@@ -31,9 +31,8 @@ function getResults(){
 	console.log('flipkar length'+flipkartResult.length);
 	sql = "select `product_identifier`, `spec_id`, `product_brand`,`title`, `selling_price`  from	`sepp_product_snapdeal` where `category`='laptops' ";
 	snapdealResult = wait.forMethod(pool,'query',sql);
-	sql = "select `product_identifier`, `spec_id`, `product_brand`,`title`, `selling_price`  from	`sepp_product_amazon` where `category`='laptops'";
+	sql = "select `product_identifier`, `spec_id`, `product_brand`,`title`, `selling_price`  from	`sepp_product_amazon` where `category`='laptops' ";
 	amazonResult = wait.forMethod(pool,'query',sql);
-	console.log('amazon length'+amazonResult.length);
 	compareResults(flipkartResult,snapdealResult,amazonResult);
 }
 
@@ -57,7 +56,7 @@ function compareResults(result1,result2,result3){
 		}
 		arr1["title"]=result1[i].title;
 		snapdealCurrentMatch='';
-		loop2:for(var k=0;k<rules['flipkart_snapdeal']['laptops'].length;k++)
+		loop2:for(var k=0;k<rules['laptops'].length;k++)
 		{
 			loop3:for(var j=0;j<result2.length;j++)
 			{
@@ -73,7 +72,7 @@ function compareResults(result1,result2,result3){
 					arr2["title"] = result2[j].title;
 					//console.log(rules['laptops'].length);
 					
-					if ( funcs.decodeRules(arr1,arr2,rules['flipkart_snapdeal']['laptops'][k]) )
+					if ( funcs.decodeRules(arr1,arr2,rules['laptops'][k]) )
 					{
 						//out += result1[i].title+ "::"+ result2[j].title+"\n";
 						count++;
@@ -85,12 +84,10 @@ function compareResults(result1,result2,result3){
 			}
 		}
 		amazonCurrentMatch='';
-		//console.log('amazon length'+result3.length);
-		loop4:for(var k=0;k<rules['flipkart_amazon']['laptops'].length;k++)
+		loop4:for(var k=0;k<rules['laptops'].length;k++)
 		{
 			loop5:for(var j=0;j<result3.length;j++)
 			{
-				//console.log(result3[j].product_identifier)
 				if(!amazonMatchList.hasOwnProperty(result3[j].product_identifier)){
 					var arr2 = JSON.parse(result3[j].spec_id);
 					if(arr2['modelid'] && arr2['modelid']!="-1"){
@@ -103,7 +100,7 @@ function compareResults(result1,result2,result3){
 					arr2["title"] = result3[j].title;
 					//console.log(rules['laptops'].length);
 					
-					if ( funcs.decodeRules(arr1,arr2,rules['flipkart_amazon']['laptops'][k]) )
+					if ( funcs.decodeRules(arr1,arr2,rules['laptops'][k]) )
 					{
 						//out += result1[i].title+ "::"+ result3[j].title+"\n";
 						count++;
